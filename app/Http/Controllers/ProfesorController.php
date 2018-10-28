@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-
+use App\Materia;
 use App\Profesor;
 use Illuminate\Http\Request;
 
@@ -30,7 +30,8 @@ class ProfesorController extends Controller
      */
     public function create()
     {
-        return view('profesor');
+        $materia=Materia::orderBy('id')->paginate(6);
+        return view('profesor',compact('materia'));
     }
 
     /**
@@ -41,12 +42,20 @@ class ProfesorController extends Controller
      */
     public function store(Request $request)
     {
+         $validatedData = $request->validate([
+        'nombre' => 'required|string|alpha|max:255',
+        'apellido' => 'required|string|alpha|max:255',
+        'cedula' => 'required|integer|max:30000000|min:4000000|unique:profesor',
+        'tlf' => 'required|unique:profesor',
+        'email' => 'required|email|max:255|unique:users',
+    ]);
 $user = new Profesor;
     $user->nombre= Input::get("nombre");
     $user->apellido = Input::get("apellido");
     $user->cedula= Input::get("cedula");
     $user->tlf = Input::get("tlf");
     $user->email= Input::get("email");
+    $user->id_mat= Input::get("id_mat");
     
    
     $user->save();
@@ -88,7 +97,7 @@ $user = new Profesor;
     public function update(Request $request, $id)
     {
       
-        $this->validate($request,[ 'nombre'=>'required', 'apellido'=>'required', 'cedula'=>'required', 'tlf'=>'required', 'email'=>'required']);
+        $this->validate($request,[ 'nombre'=>'required|string|alpha|max:255', 'apellido'=>'required|string|alpha|max:255', 'cedula'=>'required|integer|max:30000000|min:4000000|unique:profesor', 'tlf'=>'required|unique:profesor', 'email'=>'required|email|max:255|unique:users']);
 
         Profesor::find($id)->update($request->all());
         return redirect()->route('profesor.index')->with('success','Registro actualizado satisfactoriamente');

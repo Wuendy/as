@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Auth;
 class LoginController extends Controller
 {
     /*
@@ -26,13 +27,13 @@ class LoginController extends Controller
      *
      * @var string
      */
-     public function authenticate(Request $request)
+    public function __construct()
     {
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            return redirect()->intended('dashboard');
-        }
+        $this->middleware('guest',['except'=>['logout','userLogout']]);
+    }
+    public function userLogout()
+    {
+        Auth::guard('web')->logout();
+        return redirect('/');
     }
 }

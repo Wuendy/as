@@ -3,9 +3,8 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use App\Notifications\AdminResetPasswordNotification;
 class Admin extends Authenticatable
 {
     use Notifiable;
@@ -17,8 +16,9 @@ class Admin extends Authenticatable
      *
      * @var array
      */
+     protected $table='admins';
     protected $fillable = [
-        'name','last_name','cedula', 'email', 'password','profesion_id',
+        'name','last_name','cedula', 'email', 'password','job_title',
     ];
 
     /**
@@ -29,4 +29,10 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new AdminResetPasswordNotification($token));
+    }
+
 }
