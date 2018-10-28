@@ -83,7 +83,7 @@
                                
                                     <a class="dropdown-item" href="{{ route('user.logout') }}"
                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">Cerrar Sesion</a><form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                     document.getElementById('logout-form').submit();">Cerrar Sesion</a><form id="logout-form" action="{{ route('user.logout') }}" method="GET" style="display: none;">
                                        @csrf
                                     </form>
                                 </div>
